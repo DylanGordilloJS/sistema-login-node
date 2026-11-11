@@ -1,0 +1,20 @@
+# 🚀 Sistema de Registro y Autenticación Modular (Node.js & MySQL)
+
+Sistema backend robusto y seguro para el registro y el inicio de sesión de usuarios, construido bajo una **arquitectura modular por capas** con Node.js, Express, MySQL y cifrado de contraseñas mediante Bcrypt.
+
+---
+
+## 📂 Arquitectura del Proyecto
+
+El proyecto está organizado de manera modular para separar responsabilidades y facilitar su mantenimiento:
+
+```text
+├── config/
+│   └── conexion.js          # Conexión centralizada a la base de datos MySQL
+├── model/
+│   └── RT_Usuario/
+│       └── query_db_us.js   # Lógica de datos, consultas SQL y cifrado de seguridad
+├── server.js                # Servidor principal, rutas (endpoints) y manejo de peticiones
+├── index.html               # Vista de Registro (Frontend)
+├── login.html               # Vista de Login (Frontend)
+└── package.json             # Dependencias y configuración del proyecto
