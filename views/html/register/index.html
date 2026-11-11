@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="../../css/register/index.css">
+</head>
+<body>
+    <div class="card">
+        <h2>Registro de Usuario</h2>
+        <!-- Campos del formulario -->
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        
+        <!-- Botón para registrar -->
+        <button id="btnRegistrar">Registrarse</button>
+
+        <div class="mensaje" id="mensajeEstado"></div>
+        <div class="acount"> ya tiene cuenta <a href="../login/login.html">entra aqui</a> </div>
+    </div>
+
+    <script>
+        const btnRegistrar = document.getElementById('btnRegistrar');
+        const inputNombre = document.getElementById('nombre');
+        const inputEmail = document.getElementById('email');
+        const inputPassword = document.getElementById('password');
+        const mensajeEstado = document.getElementById('mensajeEstado');
+
+        btnRegistrar.addEventListener('click', async () => {
+            const nombre = inputNombre.value.trim();
+            const email = inputEmail.value.trim();
+            const password = inputPassword.value.trim();
+
+            // Validar que no estén vacíos
+            if (!nombre || !email || !password) {
+                mensajeEstado.style.color = "red";
+                mensajeEstado.textContent = "Por favor, completa todos los campos.";
+                return;
+            }
+
+            // 1. Armamos el objeto JSON con los datos del formulario
+            const datosUsuario = {
+                nombre: nombre,
+                email: email,
+                password: password
+            };
+
+            try {
+                mensajeEstado.style.color = "blue";
+                mensajeEstado.textContent = "Enviando datos al servidor...";
+
+                // 2. Enviamos el JSON a Node.js mediante fetch
+                const respuesta = await fetch('http://localhost:3000/CRTUSUO', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(datosUsuario)
+                });
+
+                const resultado = await respuesta.json();
+
+                if (respuesta.ok) {
+                    mensajeEstado.style.color = "green";
+                    mensajeEstado.textContent = "✅ " + resultado.mensaje;
+                    // Limpiamos los campos
+                    inputNombre.value = '';
+                    inputEmail.value = '';
+                    inputPassword.value = '';
+                } else {
+                    mensajeEstado.style.color = "red";
+                    mensajeEstado.textContent = "❌ " + resultado.error;
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                mensajeEstado.style.color = "red";
+                mensajeEstado.textContent = "❌ No se pudo conectar con el servidor.";
+            }
+        });
+    </script>
+</body>
+</html>

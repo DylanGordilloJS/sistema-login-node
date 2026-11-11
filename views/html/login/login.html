@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/login/login.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div class="card">
+
+        <h2> Login</h2>
+        <input type="text" id="correo"  placeholder="ej@gmail.com" required>
+        <input type="password" id="contra" placeholder="3142422">
+        <button id="logiar">login</button>
+        <div class="mensaje" id="mensajevrf"></div>
+        <div class="notrgt"> no esta registrado? <a href="../register/index.html"> click</a></div>
+    </div>
+
+
+    <script>
+        //los inpust
+        const inputcorreo = document.getElementById('correo');
+        const inputpassword = document.getElementById('contra');
+        //estos son de parte login el mensaje
+        const btnlogin = document.getElementById('logiar');
+        const mensaje = document.getElementById('mensajevrf');
+
+        btnlogin.addEventListener('click', async () => {
+            const email = inputcorreo.value.trim();
+            const password= inputpassword.value.trim();
+
+            if (!email || !password){
+                mensaje.style.color = "red";
+                mensaje.textContent = "Por favor, completa todos los campos.";
+                return;
+            }
+
+
+            //armar el cuperpo JSON
+
+            const Data_user ={
+                email: email,
+                password: password
+            }
+
+
+            try {
+                mensaje.style.color = "blue";
+                mensaje.textContent = 'Enviando datos al servidor...'
+
+                const respuesta = await  fetch('http://localhost:3000/login',  {
+                    method: 'POST',
+                    headers :{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Data_user)
+                })
+
+                const resultado = await respuesta.json();
+
+                 if (respuesta.ok) {
+                    mensaje.style.color = "green";
+                    mensaje.textContent = "✅ " + resultado.mensaje;
+                    // Limpiamos los campos
+                    inputcorreo.value = '';
+                    inputpassword.value = '';
+                } else {
+                    mensaje.style.color = "red";
+                    mensaje.textContent = "❌ " + resultado.error;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                mensaje.style.color = "red";
+                mensaje.textContent = "❌ No se pudo conectar con el servidor.";
+            }
+        })
+
+
+    </script>
+</body>
+</html>
